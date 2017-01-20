@@ -1,0 +1,3 @@
+{
+    "/product/:id/company": "/compnay/:id"
+}
