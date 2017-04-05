@@ -1,5 +1,5 @@
 const production = {
-    DOMAIN: 'm.xxtx.com'
+    DOMAIN: 'm.test.com'
 };
 
 const development = Object.assign({}, production, {

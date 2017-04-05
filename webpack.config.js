@@ -1,4 +1,4 @@
-var appConfig = require('./app-config');
+var appConfig = require('./app.config');
 var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -19,26 +19,39 @@ var config = {
         publicPath: PRODUCTION ? '/assets/' : '/',
     },
     module: {
-        rules: [{
-            test: /\.vue$/,
-            loader: 'vue-loader',
-            options: {
-                loaders: {
-                    // Refer to: https://github.com/vuejs/vue-loader/blob/master/docs/en/configurations/extract-css.md#webpack-2x-210-beta25
-                    css: ExtractTextPlugin.extract({
-                        loader: 'css-loader',
-                        fallbackLoader: 'vue-style-loader'
-                    })
-                }
+        rules: [
+            {
+                test: /\.vue$/,
+                use:[
+                    {
+                        loader:'vue-loader',
+                        options: {
+                            loaders: {
+                                css: ExtractTextPlugin.extract({
+                                    loader: 'css-loader',
+                                    fallbackLoader: 'vue-style-loader'
+                                })
+                            }
+                        }
+                    },
+                    {
+                        loader: 'eslint-loader'
+                    }
+                ]
+            },{
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: 'babel-loader',
+            },{
+                enforce: 'pre',
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: 'eslint-loader',
+            },{
+                test: /\.(jpg|png|gif|svg)$/,
+                loader: 'file-loader',
             }
-        },{
-            test: /\.js$/,
-            exclude: /node_modules/,
-            loader: 'babel-loader',
-        },{
-            test: /\.(jpg|png|gif|svg)$/,
-            loader: 'file-loader',
-        }]
+        ]
     },
     resolve: {
         modules: [
@@ -54,7 +67,7 @@ var config = {
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
         new ExtractTextPlugin(PRODUCTION ? '[name]-[chunkhash].css' : '[name].css'),
         new HtmlWebpackPlugin({
-            template: './src/index.html'
+            template: './src/index.templ.html'
         }),
         new webpack.DefinePlugin({
             PRODUCTION: JSON.stringify(PRODUCTION),
